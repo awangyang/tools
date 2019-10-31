@@ -4,12 +4,17 @@ package com.example.tools.poi;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.layout.font.FontProvider;
+import org.apache.commons.collections4.CollectionUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * @author wangyang
@@ -17,7 +22,7 @@ import java.io.OutputStream;
  */
 public class Html2Pdf {
 
-    public static String str="<html>\n" +
+    public static String str = "<html>\n" +
             "<head>\n" +
             "<META http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
             "<style type=\"text/css\">.b1{white-space-collapsing:preserve;}\n" +
@@ -46,6 +51,7 @@ public class Html2Pdf {
             "</head>\n" +
             "<body class=\"b1 b2\">\n" +
             "<table class=\"t1\">\n" +
+            "\n" +
             "<tbody>\n" +
             "<tr class=\"r1\">\n" +
             "<td class=\"td1\" colspan=\"2\">\n" +
@@ -57,13 +63,13 @@ public class Html2Pdf {
             "</p>\n" +
             "</td><td class=\"td2\">\n" +
             "<p class=\"p2\">\n" +
-            "<span class=\"s1\">编号：</span><span class=\"s2\">P34</span>\n" +
+            "<span class=\"s1\">编号：</span><span class=\"s2\">P102</span>\n" +
             "</p>\n" +
             "</td><td class=\"td3\">\n" +
             "<p class=\"p2\">\n" +
             "<span class=\"s1\">签发人：</span>\n" +
             "</p>\n" +
-            "<p class=\"p2\"></p>\n" +
+            "<p class=\"p3\"></p>\n" +
             "</td>\n" +
             "</tr>\n" +
             "<tr class=\"r2\">\n" +
@@ -73,7 +79,7 @@ public class Html2Pdf {
             "</p>\n" +
             "</td><td class=\"td5\" colspan=\"3\">\n" +
             "<p class=\"p3\">\n" +
-            "<span class=\"s3\">发布测试1111111111111111111</span>\n" +
+            "<span class=\"s3\">测试成品应用HJHKJHJK</span>\n" +
             "</p>\n" +
             "</td>\n" +
             "</tr>\n" +
@@ -83,14 +89,16 @@ public class Html2Pdf {
             "<span class=\"s3\">发布单位</span>\n" +
             "</p>\n" +
             "</td><td class=\"td6\">\n" +
-            "<p class=\"p3\"></p>\n" +
+            "<p class=\"p3\">\n" +
+            "<span class=\"s3\">参考消息,40%;新华社,60%</span>\n" +
+            "</p>\n" +
             "</td><td class=\"td2\">\n" +
             "<p class=\"p3\">\n" +
             "<span class=\"s3\">发布时间</span>\n" +
             "</p>\n" +
             "</td><td class=\"td3\">\n" +
             "<p class=\"p3\">\n" +
-            "<span class=\"s3\">2019-09-12 15:49:40.973</span>\n" +
+            "<span class=\"s3\">2019-10-09 15:43:00</span>\n" +
             "</p>\n" +
             "</td>\n" +
             "</tr>\n" +
@@ -100,17 +108,13 @@ public class Html2Pdf {
             "<span class=\"s3\">所属领域</span>\n" +
             "</p>\n" +
             "</td><td class=\"td6\">\n" +
-            "<p class=\"p3\">\n" +
-            "<span class=\"s3\">体育</span>\n" +
-            "</p>\n" +
+            "<p class=\"p3\"></p>\n" +
             "</td><td class=\"td2\">\n" +
             "<p class=\"p3\">\n" +
             "<span class=\"s3\">专题</span>\n" +
             "</p>\n" +
             "</td><td class=\"td3\">\n" +
-            "<p class=\"p3\">\n" +
-            "<span class=\"s3\">YDYL</span>\n" +
-            "</p>\n" +
+            "<p class=\"p3\"></p>\n" +
             "</td>\n" +
             "</tr>\n" +
             "<tr class=\"r2\">\n" +
@@ -126,7 +130,7 @@ public class Html2Pdf {
             "</p>\n" +
             "</td><td class=\"td3\">\n" +
             "<p class=\"p3\">\n" +
-            "<span class=\"s3\">发布测试1111111111111111111</span>\n" +
+            "<span class=\"s3\">测试成品应用HJHKJHJK</span>\n" +
             "</p>\n" +
             "</td>\n" +
             "</tr>\n" +
@@ -142,9 +146,7 @@ public class Html2Pdf {
             "<span class=\"s3\">国家地区2</span>\n" +
             "</p>\n" +
             "</td><td class=\"td3\">\n" +
-            "<p class=\"p3\">\n" +
-            "<span class=\"s3\">美国</span>\n" +
-            "</p>\n" +
+            "<p class=\"p3\"></p>\n" +
             "</td>\n" +
             "</tr>\n" +
             "<tr class=\"r2\">\n" +
@@ -162,16 +164,556 @@ public class Html2Pdf {
             "<span class=\"s3\">正文：</span>\n" +
             "</p>\n" +
             "<p class=\"p3\">\n" +
-            "<span class=\"s3\">12月28日接口 类 ： SearchClient&lt;br&gt;包 路径： casia.basic.analysisgroup.es.search.SearchClient&lt;br&gt;最新 接口 jar 请 在 团队 maven 私库 中按 keywords 检索 \" fusionSearch \" ，或 点击该链接  http://192.168.6.154:8081/nexus/#nexus-search;quick~fusionSearch   &lt;br&gt;构造 函数&lt;br&gt;SearchClient ( String coreserver , int port, String clusterName , String index, String type)&lt;br&gt;参数 说明：&lt;br&gt;coreserver ： 索引服务 IP 地址&lt;br&gt;port ：索引 服务端口&lt;br&gt;clusterName ： 集群名称&lt;br&gt;index ： 索引名称 ， 可为 null&lt;br&gt;type ： 类型名 ， 与数据库表名相同 ， 可为 string 格式 数组 。&lt;br&gt;具体 参数 对应 值 及 已索引的数据表 请 关注 禅道 平台 ： http://172.18.11.1/index.php?m=doc&amp;amp;f=view&amp;amp;docID=66&lt;br&gt;常量类路径&lt;br&gt;参数 中几个常量类路径：&lt;br&gt;KeywordsCombine 类 ：  casia  .  basic  .  analysisgroup  .  es  .  search  .  common  ， 包括 \"AND\" 、 \"OR\" 两个 常量， 表示关键词之间的 \" 与 \" -- AND 、 \" 或 \" -- OR 关系 ；&lt;br&gt;ISIOperator 类 ： casia.basic.analysisgroup.es.search.common ， 包括 \"MUST\" 、 \"MUST_NOT\" 两个 常量， 表示 检索条件 是 \"必须 出现 \" --MUST 、\"必须不 出现 \" --MUST_NOT 关系 ；&lt;br&gt;SortOrder 类 ： org.elasticsearch.search.sort ，包括 \"ASC\" 、 \"DESC\" 两个 常量， 表示 \" 正序 \" --ASC 、 \" 倒序 \" --DESC 。&lt;br&gt;基本 检索接口&lt;br&gt;4 .1 全文检索接口&lt;br&gt;addKeywordsQuery (String field, String keywords, ISIOperator operator, KeywordsCombine combine)&lt;br&gt;单 字段 全文 检索接口&lt;br&gt;参数说明 ：&lt;br&gt;field ： 字段 名称&lt;br&gt;keywords ： 检索关键词&lt;br&gt;operator ：检索 条件 \"必须 出现 \" 还是 \"必须不 出现 \"&lt;br&gt;combine ： 如果 关键词是空格分隔的， 该 参数表示 关键词之间的与、或关系， 比如 keywords 是 \"China USA\" ， combine 是 \"AND\" ， 表示该检索 条件 是 C hina 和 USA 都 要包含 才 满足 该 条件； combine 是 \"OR\"   ， 表示该检索 条件 是 C hina 和 USA 包含其中 一个即满足 该 条件 ；&lt;br&gt;示例 ：&lt;br&gt;&lt;br&gt;&lt;br&gt;适用该 接口字段 ： title 、 content 、 summary&lt;br&gt;&amp;nbsp;&lt;br&gt;addKeywordsQuery (String[] fields, String keywords, ISIOperator operator, KeywordsCombine combine)&lt;br&gt;多 字段 全文 检索接口&lt;br&gt;参数说明 ：&lt;br&gt;fields ： 字段 名称 数组&lt;br&gt;keywords ： 检索关键词&lt;br&gt;operator ：检索 条件 \"必须 出现 \" 还是 \"必须不 出现 \"&lt;br&gt;combine ：如果 关键词是空格分隔的， 该 参数表示 关键词之间的与、或关系， 比如 keywords 是 \"China USA\" ， combine 是 \"AND\" ， 表示该检索 条件 是 C hina 和 USA 都 要包含 才 满足 该 条件； combine 是 \"OR\"   ， 表示该检索 条件 是 C hina 和 USA 包含其中 一个即满足 该 条件 ；&lt;br&gt;示例 ：&lt;br&gt;&lt;br&gt;适用该 接口字段 ： title 、 content 、 summary&lt;br&gt;4 .2 精确查询接口&lt;br&gt;addPhraseQuery (String field, String keywords)&lt;br&gt;短语 查询接口 ， 对 检索 关键词 不 分词&lt;br&gt;参数说明 ：&lt;br&gt;field ： 字段 名称&lt;br&gt;keywords ： 检索关键词&lt;br&gt;示例 ：&lt;br&gt;&lt;br&gt;适用该 接口字段 ： title 、 content 、 summary&lt;br&gt;&amp;nbsp;&lt;br&gt;addTermQuery (String field, String term, ISIOperator operator )&lt;br&gt;原子 查询接口 ，适用于 不 分词 字段&lt;br&gt;参数说明 ：&lt;br&gt;fields ： 字段 名称&lt;br&gt;keywords ： 检索 条件， 支持 同时 传入多个条件 （ 以 空格 分隔 ）， 条件 之间 是或的关系&lt;br&gt;operator ：检索 条件 \"必须 出现 \" 还是\"必须不 出现 \" 。&lt;br&gt;示例 ：&lt;br&gt;&lt;br&gt;适用该 接口字段 ： 除 title 、 content 、 summary 外 的其他字段&lt;br&gt;与 该接口有相同效果的还有接口 addPrimitiveTermQuery (String field, String[] terms, ISIOperator operator ) ， 不同之处在于该接口的多个条件是数组 形式传参的 。&lt;br&gt;&amp;nbsp;&lt;br&gt;4 .3 范围查询接口&lt;br&gt;addRangeTerms (String field, long startTerm , long endTerm )&lt;br&gt;范围 查询接口 ， 范围边界是起始和结束条件之间的闭区间&lt;br&gt;参数说明 ：&lt;br&gt;fields ： 字段 名称&lt;br&gt;startTerm ： 起始 条件&lt;br&gt;endTerm ： 结束 条件&lt;br&gt;示例 ：&lt;br&gt;&lt;br&gt;适用该 接口字段 ： 值是 数字 类型 的 字段&lt;br&gt;&amp;nbsp;&lt;br&gt;addRangeTerms (String field, String startTerm , String endTerm )&lt;br&gt;范围 查询接口 ， 范围边界是起始和结束条件之间的闭区间&lt;br&gt;参数说明 ：&lt;br&gt;fields ： 字段 名称&lt;br&gt;startTerm ：起始 条件 ， 日期类型值格式： yyyy -MM- dd   HH:mm:ss&lt;br&gt;endTerm ：结束 条件 ， 日期类型值格式： yyyy -MM- dd   HH:mm:ss&lt;br&gt;示例 ：&lt;br&gt;&lt;br&gt;适用该 接口字段 ： 值是字符串、 日期类型的字段&lt;br&gt;&amp;nbsp;&lt;br&gt;4 .4 排序接口&lt;br&gt;addSortField (String field, SortOrder order)&lt;br&gt;排序 接口 ，该接口 可多次调用， 排序 方式依据调用次序 进行 叠加 。&lt;br&gt;参数说明 ：&lt;br&gt;fields ： 字段 名称&lt;br&gt;order ： 排序方式&lt;br&gt;示例 ：&lt;br&gt;&lt;br&gt;适用该 接口字段 ： 值是字符串、 日期类型的字段&lt;br&gt;&amp;nbsp;&lt;br&gt;4 .5 翻页接口&lt;br&gt;setStart ( int start)&lt;br&gt;从第几条结果取数据&lt;br&gt;参数说明 ：&lt;br&gt;start ： 从第几条结果取数据 ， 从 0 开始 计数&lt;br&gt;&amp;nbsp;&lt;br&gt;setRow ( int rows)&lt;br&gt;每次返回 多少 条 数据&lt;br&gt;参数说明 ：&lt;br&gt;rows ： 从第几条结果取数据 ， 从 0 开始 计数&lt;br&gt;&amp;nbsp;&lt;br&gt;getTotal ()&lt;br&gt;返回 结果总数 ， 此接口要在执行 execute () 后 才有效。&lt;br&gt;4 .6 返回结果接口&lt;br&gt;getResults   ()&lt;br&gt;返回 命中记录 对应 mongodb 中的 _id ， 此接口要在执行 execute () 后 才有效。 如果 type 是 null 或多个，则 String[] 第一个数值 是类型 名称；其余字段顺序和 execute(String[]) 方法中的参数 fields 一致 。&lt;br&gt;&amp;nbsp;&lt;br&gt;高级 检索及统计接口&lt;br&gt;见 javadoc&lt;br&gt;索引字段 说明&lt;br&gt;已 索引字段&lt;br&gt;已 索引数据表见  http://172.18.11.1/index.php?m=doc&amp;amp;f=view&amp;amp;docID=66  ， 除 html 代码类字段外 的其他字段 都 会索引 。 如 发现有字段未索引，可能 属于 新增 字段，如需添加索引请及时告知 ， 谢谢！&lt;br&gt;索引存储 哪些字段&lt;br&gt;对于 进行分词的文本类字段，比如 title 、 content ，构建 索引时会 只索引 不 存储 ； 其他字段一般都会存储到索引中。&lt;br&gt;特殊 字段 说明&lt;br&gt;对于各数据表中的 date 类型字段，在索引的时候 会 做特殊处理 ， 将 一个 日期字段转换成 两个 字段索引，比如 datepublished 字段，在索引中会有 datepublished 和 datepublished 2 这样 两个字段， 索引 数 值 分别 按 yyyyMMdd HHmmss 和 yyyyMMdd 两种 格式进行格式化 ， 即 datepublished 带时分秒 ， datepublished2 不 带 时分秒 ，类型转换为 长整型 ， 以 便于按照日期进行数据检索，提高检索速度。&lt;br&gt;注意 ！ ！！&lt;br&gt;如果初始化 一次 SearchClient 多次 检索， 必须 每次获取结果后执行 reset() 接口 ，以免 两次 检索条件叠加 影响下次检索。&lt;br&gt;完成 检索后调用 close() 接口 关闭连接。</span>\n" +
+            "<span class=\"s3\"><p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\">\n" +
+            "<span id=\"1569809050469\" style=\"background:#dacbae;position:relative;\">2月15日 <i class=\"quote-index-x\" contenteditable=\"\" data-pid=\"1F3026B1-B13B-4272-8511-299E72E56017\" data-type=\"4\" style=\"display:inline-block;font-size:12px;background: rgb(224,108,108);border-radius: 2px;min-width: 40px;color: #fff;font-style: normal;height: 16px;position: relative;top:2px;padding: 2px 5px 2px 2px;box-sizing:border-box;\"> <i class=\"index\" contenteditable=\"false\" style=\"cursor:pointer;line-height: 12px;padding: 0 2px;background: #fff;display:inline-block;vertical-align:middle;border-radius: 50%;color: rgb(224,108,108);text-align: center;font-style: normal;text-indent: 0;float:left;\">1</i> <i class=\"quote-close-x\" contenteditable=\"false\" data-sentenceid=\"1569809050469\" style=\"cursor: pointer;font-style: normal;text-indent: 0;float:right;line-height: 12px;\">x</i> </i> </span><span id=\"1569809080681\" style=\"background:#dacbae;position:relative;\">特朗普 <i class=\"quote-index-x\" contenteditable=\"\" data-pid=\"2\" data-type=\"3\" style=\"display:inline-block;font-size:12px;background: rgb(224,108,108);border-radius: 2px;min-width: 40px;color: #fff;font-style: normal;height: 16px;position: relative;top:2px;padding: 2px 5px 2px 2px;box-sizing:border-box;\"> <i class=\"index\" contenteditable=\"false\" style=\"cursor:pointer;line-height: 12px;padding: 0 2px;background: #fff;display:inline-block;vertical-align:middle;border-radius: 50%;color: rgb(224,108,108);text-align: center;font-style: normal;text-indent: 0;float:left;\">2</i> <i class=\"quote-close-x\" contenteditable=\"false\" data-sentenceid=\"1569809080681\" style=\"cursor: pointer;font-style: normal;text-indent: 0;float:right;line-height: 12px;\">x</i> </i> </span><span id=\"1569810518739\" style=\"background:#dacbae;position:relative;\">公开 <i class=\"quote-index-x\" contenteditable=\"\" data-pid=\"7a617a77743796\" data-type=\"2\" style=\"display:inline-block;font-size:12px;background: rgb(224,108,108);border-radius: 2px;min-width: 40px;color: #fff;font-style: normal;height: 16px;position: relative;top:2px;padding: 2px 5px 2px 2px;box-sizing:border-box;\"> <i class=\"index\" contenteditable=\"false\" style=\"cursor:pointer;line-height: 12px;padding: 0 2px;background: #fff;display:inline-block;vertical-align:middle;border-radius: 50%;color: rgb(224,108,108);text-align: center;font-style: normal;text-indent: 0;float:left;\">3</i> <i class=\"quote-close-x\" contenteditable=\"false\" data-sentenceid=\"1569810518739\" style=\"cursor: pointer;font-style: normal;text-indent: 0;float:right;line-height: 12px;\">x</i> </i> </span><span style=\"font-weight:bold;\">2017年7月27 -处理浏览器兼容性</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-family:幼圆;\"><span style=\"font-size:34.7px;\">&lt;!--[if IE 5]&gt; 仅IE5.0与IE5.5可以识别 &lt;![endif]--&gt; </span></span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>&lt;!--[if gt IE 5.0]&gt; IE5.0以及IE5.0以上版本都可以识别 &lt;![endif]--&gt; </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>&lt;!--[if lt IE 6]&gt; IE6以及IE6以下版本可识别 &lt;![endif]--&gt; </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>&lt;!--[if gte IE 6]&gt; IE6以及IE6以上版本可识别 &lt;![endif]--&gt; </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>&lt;!--[if lt IE 7]&gt; IE7以及IE7以下版本可识别 &lt;![endif]--&gt; </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>&lt;!--[if ！IE ]&gt; 非IE版本可识别 &lt;![endif]--&gt; </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">display:flex;弹性布局 --优点：方便 ！缺点：处理兼容性问题非常麻烦</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.25in;margin-left:0.3125in;text-align:start;border-left:1.500pt solid darkgray;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>解决：</span><span style=\"font-family:Consolas;font-size:6pt;color:black;\">display:&nbsp;-webkit-box;&nbsp;/*&nbsp;Chrome&nbsp;4+,&nbsp;Safari&nbsp;3.1,&nbsp;iOS&nbsp;Safari&nbsp;3.2+&nbsp;*/&nbsp;&nbsp;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.25in;margin-left:0.3125in;text-align:start;border-left:1.500pt solid darkgray;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">display:&nbsp;-moz-box;&nbsp;/*&nbsp;Firefox&nbsp;17-&nbsp;*/&nbsp;&nbsp;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.25in;margin-left:0.3125in;text-align:start;border-left:1.500pt solid darkgray;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">display:&nbsp;-webkit-flex;&nbsp;/*&nbsp;Chrome&nbsp;21+,&nbsp;Safari&nbsp;6.1+,&nbsp;iOS&nbsp;Safari&nbsp;7+,&nbsp;Opera&nbsp;15/16&nbsp;*/&nbsp;&nbsp;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.25in;margin-left:0.3125in;text-align:start;border-left:1.500pt solid darkgray;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">display:&nbsp;-moz-flex;&nbsp;/*&nbsp;Firefox&nbsp;18+&nbsp;*/&nbsp;&nbsp;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.25in;margin-left:0.3125in;text-align:start;border-left:1.500pt solid darkgray;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:blue;\">display:&nbsp;-ms-flexbox;&nbsp;/*&nbsp;IE&nbsp;10&nbsp;*/&nbsp;&nbsp;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.25in;margin-left:0.3125in;text-align:start;border-left:1.500pt solid darkgray;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">display:&nbsp;flex;&nbsp;/*&nbsp;Chrome&nbsp;29+,&nbsp;Firefox&nbsp;22+,&nbsp;IE&nbsp;11+,&nbsp;Opera&nbsp;12.1/17/18,&nbsp;Android&nbsp;4.4+&nbsp;*/&nbsp;&nbsp;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>注意：</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>display:flex与display:box都可用于弹性布局；flex是2012之后提出的写法；box是2009年的提法，已经过时；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>处理加浏览器前缀的方式外，在ie低版本中也可用float代替弹性布局；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:#c00000;\">display:flex 兼容性问题很大 不要滥用flex </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;color:#c00000;\">重点：使用display:flex的场景：一侧固定宽度，另一侧自适应</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><!--Image link to '0.png' can be here--><!--Image link to 'dab0.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">3.:nth-child()选择器 </span><span> 所有的主流浏览器均支持，</span><span style=\"color:blue;\">除IE8及更早的版本</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:blue;\">注意：在页面中尽量不要用下标选择器 页面上位置调换就会出现问题</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">4.Transform属性 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>IE9 支持替代的-ms-transform （仅适用于2D转换）</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Opera 仅支持2D转换</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Safari和Chrome支持替代的-webkit-transform（3D与2D转换）</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">5.如何实现元素的水平垂直居中？</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">-水平居中（ 种）</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>①行内元素 例如：a,b(加粗),strong(强调),i,span,img,input,select等</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>父元素设text-align:center;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>②块级元素 特点：独占一行 支持宽高 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Margin: 0 auto;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>③浮动的元素：子元素浮动 可以给父元素宽度设置为width:fit-content,配合margin:0 auto;</span> <!--Image link to '123d1.png' can be here--> <!--Image link to '1a817.png' can be here--> <!--Image link to '1c6c5.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>④老版display:box 设置弹性布局，box-orient:horizontal主轴方向(vertical垂直) ,box-pack:center盒子内部子元素的排列方式 此处是均等分割多余空间；</span> <!--Image link to '2365b.png' can be here--> <!--Image link to '24c8d.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>⑤新版display:flex,设置父元素display:flex;flex-direction:row;水平方向为主轴;justify-content:center;</span> <!--Image link to '2e799.png' can be here--> <!--Image link to '2f8cc.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>⑥CSS3属性transform:translate(x,y) </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>http://www.jianshu.com/p/09ece194956a?utm_source=desktop&amp;utm_medium=timeline</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年7月28 -处理浏览器兼容性(2)</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Bxslider支持到IE7+ 各种现代浏览器</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>定义浏览器的渲染方式：IE=edge,chrome=1 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:blue;\">&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge,chrome=1&quot;&gt;</span><span> </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>外引：Google开发的一个Google Chrome Frame(Google Chrome 浏览器内嵌框架-GCF)，可以让用户的IE浏览器外观不变，但用户在浏览网页时实际使用的是Chrome的内核,并支持Windows XP及以上系统的IE6/7/7，前提是用户必须已经安装了Google Chrome Frame; 官方定义利用Javascript性能增强功能，使应用程序速度更快，响应更灵敏；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:blue;\">这段代码的解释：如果安装了GCF，则使用GCF来渲染页面[&quot;chrome=1&quot;]如果没有安装GCF，则使用最高版本的IE内核进行渲染[&quot;IE=edge&quot;]</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:black;\">::before 和:before</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:black;\">::before 双冒号的写法在CSS3新提出的，有兼容性问题 支持现代浏览器和IE8+(IE8使用:的写法) 以上 IE6/7不支持 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:black;\">background:color url() no-repeat center left; </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:black;\">注意书写的顺序 在有的浏览器中不支持 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:black;\">background-size IE8及以下不支持 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:black;\">在设置背景图像的时候,设置宽高很重要,但是IE7及以下不认识min-*属性 实际上,IE7及以下将正常的width和height当做min-width和min-height；这在现代浏览器中显示正常,但是在IE7以下就相当于没有设置高宽</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">其他：</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>尽量少用margin-top 有的浏览器有修正错误；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>CMS切图里，图片、文字只要格式正确，自己是不需要切图的，都是后端生成的；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>以后写类名格式md时间(8位)-名字首字母-语义化类名 如：md20170728-lty-header-title </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>尽量不要修改a的结构性样式，网页的链接不是前端能控制的，是CMS切图放上去的,保证去掉a以后不影响页面的样式，保险的写法是</span><span style=\"font-weight:bold;\">.title,.title a{};</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:#0070c0;\">文字垂直居中的神奇效果： </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>&lt;a href=&quot;#&quot; class=&quot;zong&quot;&gt;&lt;span&gt;声音专业委员会&lt;/span&gt;&lt;i&gt;&lt;/i&gt;&lt;/a&gt;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>a{display:inline-block; height:90px; width:90px;}</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>span{ display:inline-block; vertical-align:middle;} //必须</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>i{ height:100%; display:inline-block; vertical-align:middle;} //必须</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>高度固定 文字的行数不固定可以通过隐藏的方式,例如：</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>height:30px;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>line-height:30px;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>overflow:hidden;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>ycty.org 英才添翼管理平台账号</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><a href=\"mailto:sk1@126.com\"><span>sk1@126.com</span></a></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>123456</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年7月31</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>html5中页面拨打电话的方式</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>&lt;a href=&quot;tel:88888888&quot;&gt;拨号&lt;/a&gt;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>&lt;a href=&quot;sms:888888&quot;&gt;发短信&lt;/a&gt;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">解决？</span><span style=\"font-size:12pt;\">在webkit浏览器中字体最小显示12号字体</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><!--Image link to '34d31.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><span>注意：这个属性设定文字大小是否根据设备来自动调整显示的大小，none就禁止调整；建议局部调整，全局设置的话当用户滚轮缩放网页，文字却不变，用户体验不好；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:宋体;font-size:12pt;\"><!--Image link to '35ca8.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><span>问题：transform缩放会将元素的宽高整体等比例缩放，最后影响布局，可以先将元素等比例放大，再缩放就不会有问题啦，稍微调下位置就OK；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:宋体;font-size:10pt;\"><span style=\"font-weight:bold;color:blue;\">总结：-webkit-text-size-adjust的本职是用于mobile的；iPhone和iPad默认设定不一样；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:宋体;font-size:10pt;\"><span style=\"font-weight:bold;color:blue;\">iPhone默认设定-webkit-text-size-adjust:auto;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:宋体;font-size:10pt;\"><span style=\"font-weight:bold;color:blue;\">iPad默认设定-webkit-text-size-adjust:none ；(iPad默认是不调节的)</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><!--Image link to '366a2.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><!--Image link to '3d9d3.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>form表单的target标签配合iframe实现不跳转刷新</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><!--Image link to '4bf6c.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><!--Image link to '4d62e.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><span>说明：</span><span style=\"font-family:宋体;font-size:12pt;\">target的作用是让form提交后在什么窗口下打开，使用iframe 但是将iframe设为看不见的，最终form表单提交会打开iframe ，但iframe被我们设置成看不见的，这样form提交时就刷新不跳转。</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>记编程数学的表单部分标题被压住的问题？</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>原因可能性：表单部分距离标题设的padding值是固定的百分比 (根据父元素的宽度和高度来确定的，表单的高度是固定值)，所以在不同的屏幕尺寸下，表单主体部分和标题的距离在大屏幕下可能被压住，在小屏幕下显示正常或距离稍大。（矛盾的地方在于padding(margin)在不同的屏幕下的百分比也不能是固定的。</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>） 解决方案：将表单的高度不能设为固定值，而是高度随内容的变化的</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年8月1日</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>正则中的特殊字符表示什么意思？ </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>[]表示字符类 括号里是字符集 例如 /[abc]/表示含有a,b,c任何一个字母的字符都匹配；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>\\s表示空格符 制表符 换行符 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>\\w 小写字符 大学字符 数据 下划线</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>\\d 任意数字 [0-9]</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>\\b 在字符类中使用表示退格符 可以用来指定匹配的位置,即匹配到达单词的边界 例如：查找一个句子中的单词Java，可以使用/\\bjava\\b/;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>- 表示连字符 例如[a-z]</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>.表示除换行符 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>^ 两重含义：开始标记和非 例如：/^a/表示以a开始的字符; 当在[]中时:/[^a]/表示非a的所有字符</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>$ 表示字符结尾 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>{} 表示重复上一项; 例如/\\d{2,4}/表示数字出现至少2次，最多4次；其他三种格式如下：{n,m}表示至少n次，最多m次；{n,}至少n次;{n}恰好n次；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>?表示{0,1}</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>+表示{1,}</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>*表示{0,}</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:-0.29166666in;margin-left:0.5833333in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>| 表示或的含义 例如 /ab|cd|ef/匹配含有ab或cd或ef的字符串</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>JS中的字符串API</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>a)string.substring(start,stop);</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>作用：提取字符串中介于两个指定下标之间的字符 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>参数说明：start 一个非负整数，表示起始位置；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:1.2069445in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Stop 一个非负整数，表示结束位置；</span><span style=\"font-weight:bold;color:blue;\">比要截取的子串的最后一位要多1；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33402777in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>返回值：一个新的字符串，其内容是从start处到stop-1处的所有字符；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>重要事项：与</span><a href=\"http://www.w3school.com.cn/jsref/jsref_slice_string.asp%22 \\o %22JavaScript slice() %E6%96%B9%E6%B3%95\"><span>slice()</span></a><span>和</span><a href=\"http://www.w3school.com.cn/jsref/jsref_substr.asp%22 \\o %22JavaScript substr() %E6%96%B9%E6%B3%95\"><span>substr()</span></a><span>方法不同的是，</span><span style=\"font-weight:bold;color:blue;\">substring()不接受负的参数</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>b)str.replace(regexp/substr,replacement);</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>作用：replace()方法用于在字符串中用一些字符串替换另一些字符，或替换一个与正则表达式匹配的子串;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>C)str.substr(start,length)</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>作用：在字符串中抽取从start下标开始的length长度的字符</span><span style=\"font-weight:bold;color:blue;\">(包含起始下标)</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>返回值：返回新的子字符串</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年8月3日</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33402777in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>1.获取事件对象常用写法</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33402777in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>var event?event||window.event;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><!--Image link to '4e486.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33402777in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>从上图可以看出：</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33402777in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>ie9 Opera Safari Chrome既支持event又支持window.event;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33402777in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>ie6/7/8只支持window.event;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33402777in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Firefox只支持事件对象作为第一个参数传入即arguments[0];</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>2.</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>event.clientY/X 事件发生时鼠标指针在浏览器页面(客户区)的垂直/水平坐标</span><br />\n" +
+            "<span>$(selector).offset()获取当前元素相对于document的偏移量 top与left</span><br />\n" +
+            "<span>$(document).scrollTop()/Left() 获取匹配元素的滚动条的偏移量(垂直和水平)</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>伪类用法：</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><!--Image link to 'd3535.png' can be here--><!--Image link to 'd71fe.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年8月4日 移动端随笔</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">响应式与自适应？</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>响应式与自适应的原理是相似的，都是检测设备，根据不同的设备采用不同的css，而且css都是采用百分比的，而不是固定的宽度；不同点是响应式的模板在不同的设备上看上去是不一样的，会随着设备的改变而改变展示样式，而自适应不会，所有的设备看起来都是一套模板，不过是宽高或者图片变小了，不会根据设备采用不同的展示样式。</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">为页面上所有相对URL规定基准URL</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>&lt;base href=&quot;http://www.example.com/&quot;&gt; 注意：URL为绝对URL</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年8月7日</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;color:blue;\">1.平台前端框架使用手册</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><a href=\"http://lianglei.net.cn/demo-ui/platform-help/htmldemo/\"><span>http://lianglei.net.cn/demo-ui/platform-help/htmldemo/</span></a></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:blue;\">2.</span><span style=\"font-weight:bold;color:blue;\">SVN地址</span><span style=\"color:blue;\">：svn://123.59.55.96/cyt/web/platform-ui-local </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"color:blue;\">账号：liutingyu 密码：liutingyu123</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年8月8日</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">1.URL中的#!是什么意思？</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>URL中的#本来的用途是跳转到页内锚点。一个URL中#后的值不影响所访问网页的内容，所以搜索引擎在处理仅仅hash tag不同的多个URL时会当做</span><span style=\"font-weight:bold;\">相同内容</span><span>从而</span><span style=\"font-weight:bold;\">忽略</span><span>hash tag；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>但近年来 hash tag 越来越多地被用于 AJAX 请求获取数据，不同 hash tag 对应的网页内容也有所不同，为了有效地区别这种情况和过去传统的页内锚点标示，让搜索引擎更好地抓取 AJAX 数据，Google 提出的解决方案 (似乎是在 2009 年) 是用 #! (被称为 hashbang ) 来进行区分，他们将带有</span><span style=\"font-weight:bold;\"> #! </span><span>的 URL 称为 pretty AJAX URL 。当网页爬虫遇到这样的 URL 就会</span><span style=\"font-weight:bold;\">将带不同 hash tag 的 URL 当做不同内容来进行抓取</span><span>，从而获得更全的信息。</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年8月9日 SVN使用教程</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">建立库 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>A)新建文件夹，目录与文件名最好都是英文；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>B)打开文件夹，在空白处按下&quot;shift+鼠标右键&quot;；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>C)弹出菜单中选择&quot;TortoiseSVN-Create respository here&quot;;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>D)弹出对话框 提示创建成功；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">导入项目</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>A)打开已有的项目文件夹，在空白处点击&quot;shift+鼠标右键&quot;；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>B)弹出菜单中选择&quot;TortoiseSVN-Import&quot;;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>C)选择导入的路径，填写备注信息，点击&quot;OK&quot;开始导入；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>D)导入完成后会弹出提示，拖动滚动条查看导入的项目，点击&quot;OK&quot;完成导入；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">建立工作目录（检出）</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>A)新建工作目录文件夹，在空白处点击&quot;shift+鼠标右键&quot;；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>B)弹出菜单中选择&quot;SVN Checkout...&quot;;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>C)在弹出的对话框中选择库目录、工作目录，点击&quot;OK&quot;开始检出；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>D)弹出详细信息对话框，导出完成后，点击&quot;OK&quot;；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">更新工作目录</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>A)在对工作目录进行修改前，为保证你的文件是最新的，需要进行更新操作；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>B)在工作目录空白处点击鼠标右键，选择&quot;SVN Update&quot;;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>C)会弹出对话框开始更新，并显示更新了哪些内容，库版本是多少；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">提交工作目录</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>A)在做了修改需要用到提交操作； </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>B)在工作目录处点击鼠标右键，选择&quot;SVN Commit&quot;;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>C)会弹出对话框，可以输入备注信息，显示将要提交哪些文件，点击&quot;OK&quot;开始提交；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>D)弹出对话框显示提交进度，完成后点击&quot;OK&quot;完成提交；</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>2.COM_TOOLS.DT_ajaxReload(table); 更新数据后刷新组件</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Top.COM_TOOLS.alert();相对于整个窗口居中</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>用PS去掉图片上的文字？</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>用修补工具选中</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年8月18日 自适应解决方案：</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span style=\"font-weight:bold;\">需求1：</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>1. 这个矩形的高度和浏览器窗口的高度相同，不能出现纵向滚动条</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>2. 绿色部分高度固定，比如50px</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>紫色部分填充剩余的高度</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>解决方案：</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&lt;</span><span style=\"color:blue;\">div</span><span style=\"color:black;\">&nbsp;id=&quot;main&quot;&gt;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;&lt;</span><span style=\"color:blue;\">div</span><span style=\"color:black;\">&nbsp;id=&quot;nav&quot;&gt;nav&lt;/</span><span style=\"color:blue;\">div</span><span style=\"color:black;\">&gt;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;&lt;</span><span style=\"color:blue;\">div</span><span style=\"color:black;\">&nbsp;id=&quot;content&quot;&gt;content&lt;/</span><span style=\"color:blue;\">div</span><span style=\"color:black;\">&gt;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&lt;/</span><span style=\"color:blue;\">div</span><span style=\"color:black;\">&gt;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">html, body {</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">height</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">100%</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">margin</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">0px</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">padding</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">0px</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">}</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">#main {</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">background-color</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">#999</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">height</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">100%</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">} </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">#nav {</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">background-color</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">#85d989</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">width</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">100%</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">height</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">50px</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">}</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">#content {</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">background-color</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">#cc85d9</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">width</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">100%</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">position</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">absolute</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">top</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">50px</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">bottom</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">0px</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=\"color:blue;\">left</span><span style=\"color:black;\">: </span><span style=\"color:#009900;\">0px</span><span style=\"color:black;\">;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\"><span style=\"color:black;\">}</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Consolas;font-size:6pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年8月21日</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>将数组中的每个元素都转为字符串，用自定义的连接符分隔</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Join()用法：</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>A.将数组中的每个元素都转为字符串</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Arr.Join()</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>B.无缝拼接</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Arr.join(&quot;&quot;)</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>C.将单词组成句子 --单词之间加空格</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Arr.join（&quot; &quot;）</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>D.判断数组是不是空字符数组-无缝拼接后为空则为空字符数组</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>If(Arr.join（&quot;&quot;）==&quot;&quot;){该数组为空字符数组}</span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\"><span style=\"font-weight:bold;\">2017年8月22日</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>1.bootstrap中的类.hidden/.hide样式类均为</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>.hidden/.hide{display:none !important}</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Jquery中的$().show()文档中提示：如果样式规则有以上的写法,则.show不会推翻 !Important。建议通过removeClass()类移除让元素显示出来</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>类似小圆点的样式中添加：font-size:1px ;line-height:1px;</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>Rgba的兼容性问题：兼容IE9+以上</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;margin-left:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>兼容性处理(IE8及以下)：</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;margin-left:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>filter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#7f000000, endcolorstr=#7f000000);</span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;margin-left:0.29166666in;text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><!--Image link to 'db755.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>兼容display:inline-block *display:inline;*zoom:1 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;margin-left:0.29166666in;text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\"><!--Image link to 'eaf35.png' can be here--></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>页面结构 css放在style里,功能样式图片放在img里 外层素材图片放在images </span></p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33333334in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\"><span>两个子元素都需要设line-height前提设的值都一样 给父元素设就好啦 </span></p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;margin-left:0.29166666in;text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Calibri;font-size:10pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:Calibri;font-size:10pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33402777in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.33402777in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-indent:1.2069445in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:start;hyphenate:auto;font-family:Calibri;font-size:10pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:center;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:14pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "\n" +
+            "<p style=\"text-indent:0.29166666in;text-align:justify;hyphenate:auto;font-family:宋体;font-size:12pt;\">&nbsp;</p>\n" +
+            "</span>\n" +
             "</p>\n" +
             "</td>\n" +
             "</tr>\n" +
             "</tbody>\n" +
-            "</table>\n" +
+            "</table>" +
             "<p class=\"p4\"></p>\n" +
             "<p class=\"p4\"></p>\n" +
             "</body>\n" +
             "</html>";
+
+
     public static void convert(String html, OutputStream outputStream) throws IOException {
 
 //        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -180,7 +722,7 @@ public class Html2Pdf {
         fp.addStandardPdfFonts(); // 添加标准字体库、无中文
 //        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         System.out.println();
-        String path = ResourceUtils.getURL("classpath:fonts").getPath();
+        String path = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX + "fonts").getPath();
         System.out.println(path.substring(1));
         fp.addDirectory(path); // 自定义字体路径、解决中文,可先用绝对路径测试。
         props.setFontProvider(fp);
@@ -191,9 +733,38 @@ public class Html2Pdf {
 
     public static void main(String[] args) throws IOException {
 
-        String path="C:\\Users\\WangYang\\Desktop\\xxxx1.pdf";
-        FileOutputStream fileOutputStream = new FileOutputStream(path);
-        Html2Pdf.convert(str, fileOutputStream);
+//        String path = "C:\\Users\\WangYang\\Desktop\\xxxx1.pdf";
+//        FileOutputStream fileOutputStream = new FileOutputStream(path);
+//        Html2Pdf.convert(str, fileOutputStream);.
+        System.out.println(delITag(str));
 
+    }
+
+
+    public static String delITag(String content) {
+        Document doc = Jsoup.parse(content);
+        List<Element> spans = doc.getElementsByTag("span");
+        if (CollectionUtils.isNotEmpty(spans)) {
+            for (int i = 0; i < spans.size(); ++i) {
+                Element iTag = (Element) spans.get(i);
+                if (iTag != null) {
+                    Attributes attributes = iTag.attributes();
+                    if (attributes != null) {
+                        attributes.remove("style");
+                        attributes.remove("id");
+                    }
+                    List<Element> emTags = iTag.getElementsByClass("quote-index-x");
+                    if (CollectionUtils.isNotEmpty(emTags)) {
+                        Element emTag = (Element) emTags.get(0);
+                        emTag.remove();
+                    }
+                    if (!StringUtils.isEmpty(iTag.text())) {
+                        iTag.text(iTag.text().trim());
+                    }
+                }
+            }
+            content = doc.html();
+        }
+        return content;
     }
 }
